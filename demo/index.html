@@ -62,7 +62,7 @@
   .scroller .card{flex:0 0 170px}
   .card{background:var(--card);border-radius:var(--raio);overflow:hidden;box-shadow:var(--sombra);text-align:left;display:flex;flex-direction:column;position:relative;padding:0;width:100%}
   .card .foto{aspect-ratio:4/3;width:100%;min-width:0;object-fit:cover;background:#eee}
-  .card .semfoto{aspect-ratio:4/3;width:100%;display:grid;place-items:center;font-size:44px;background:linear-gradient(135deg,color-mix(in srgb,var(--cor) 18%,#fff),color-mix(in srgb,var(--cor) 45%,#fff))}
+  .card .semfoto{aspect-ratio:4/3;width:100%;display:grid;place-items:center;background:linear-gradient(135deg,color-mix(in srgb,var(--cor) 18%,#fff),color-mix(in srgb,var(--cor) 45%,#fff))}
   .card .txt{padding:10px 11px 12px;display:flex;flex-direction:column;gap:3px;flex:1}
   .card .n{font-weight:700;font-size:14px;line-height:1.25}
   .card .d{font-size:12px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -87,7 +87,14 @@
   .barra .n{background:rgba(255,255,255,.22);padding:3px 9px;border-radius:999px;font-size:13px;margin-right:8px}
   .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:19;background:#fff;border-top:1px solid var(--linha);display:flex;justify-content:space-around;padding:6px 0 calc(6px + env(safe-area-inset-bottom))}
   .tabbar button{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted);padding:4px 10px;min-width:64px}
-  .tabbar button .ic{font-size:20px;line-height:1}
+  .tabbar button .ic{display:block;width:22px;height:22px}
+  .ic svg,.semfoto svg,h2 svg,.modos svg,.seg svg,.status svg{width:100%;height:100%;display:block}
+  .card .semfoto svg{width:52px;height:52px;color:var(--cor);opacity:.6}
+  .chip .semfoto svg{width:18px;height:18px;color:var(--muted)}
+  h2 .ic{width:18px;height:18px;color:var(--cor)}
+  .modos .ic,.seg .ic{width:18px;height:18px;display:inline-block;vertical-align:-3px;margin-right:4px}
+  .status .ic{width:13px;height:13px;display:inline-block;vertical-align:-2px;margin-right:2px}
+  .card .foto.contain{object-fit:contain;background:#fff;padding:8px}
   .tabbar button.on{color:var(--cor)}
 
   /* sheets */
@@ -123,6 +130,7 @@
   .chip{flex:none;display:flex;align-items:center;gap:8px;border:1px solid var(--linha);border-radius:12px;padding:6px 10px 6px 6px;font-size:13px;font-weight:600;background:#fff}
   .chip img{width:34px;height:34px;border-radius:8px;object-fit:cover}
   .chip .semfoto{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:#f0f0f2}
+  .chip img.contain,.cart-item img.contain,.sheet .fotoTopo.contain{object-fit:contain;background:#fff}
   .chip small{display:block;color:var(--muted);font-weight:500}
   .seg{display:flex;background:#f0f0f2;border-radius:12px;padding:4px;gap:4px}
   .seg button{flex:1;padding:10px;border-radius:9px;font-weight:600;color:var(--muted)}
@@ -215,10 +223,10 @@
 <div class="barra" id="barra"><button id="verSacola"><span><span class="n" id="barraQtd">0</span>Ver sacola</span><span id="barraTotal">R$ 0,00</span></button></div>
 
 <nav class="tabbar">
-  <button data-nav="cardapio" class="on"><span class="ic">🍽️</span>Cardápio</button>
-  <button data-nav="promocoes"><span class="ic">🏷️</span>Promoções</button>
-  <button data-nav="pedidos"><span class="ic">🧾</span>Pedidos</button>
-  <button data-nav="info"><span class="ic">ℹ️</span>Info</button>
+  <button data-nav="cardapio" class="on"><i class="ic" data-ic="menu"></i>Cardápio</button>
+  <button data-nav="promocoes"><i class="ic" data-ic="tag"></i>Promoções</button>
+  <button data-nav="pedidos"><i class="ic" data-ic="receipt"></i>Pedidos</button>
+  <button data-nav="info"><i class="ic" data-ic="info"></i>Info</button>
 </nav>
 
 <div class="veu" id="veu"></div>
@@ -294,7 +302,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const CONFIG = {"slug": "demo", "nome": "Burger do Zé", "descricao": "Hambúrguer artesanal • Entrega e retirada", "whatsapp": "5541987965404", "cor": "#E4572E", "logo": "", "endereco": "Rua das Flores, 123 – Centro", "tempo_entrega": "40–60 min", "taxa_entrega": 5.0, "pedido_minimo": 20.0, "entrega": true, "retirada": true, "pagamentos": ["Pix", "Cartão na entrega", "Dinheiro"], "aceitar_fechado": false, "horario": {"dom": ["00:00", "23:59"], "seg": ["00:00", "23:59"], "ter": ["00:00", "23:59"], "qua": ["00:00", "23:59"], "qui": ["00:00", "23:59"], "sex": ["00:00", "23:59"], "sab": ["00:00", "23:59"]}, "cardapio": [{"categoria": "Burgers", "itens": [{"nome": "Clássico", "desc": "Pão brioche, 160g de carne, queijo prato, alface, tomate e molho da casa", "preco": 24.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Burgers_for_Dinner_%28Unsplash%29.jpg/960px-Burgers_for_Dinner_%28Unsplash%29.jpg"}, {"nome": "X-Bacon", "desc": "160g de carne, cheddar, bacon crocante e cebola caramelizada", "preco": 29.9, "destaque": true, "badge": "Mais pedido", "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Gourmet_Hamburger_%28Unsplash%29.jpg/960px-Gourmet_Hamburger_%28Unsplash%29.jpg"}, {"nome": "Duplo Smash", "desc": "Dois smash de 90g, queijo americano, picles e molho especial", "preco": 32.9, "destaque": true, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Hamburguesa_de_carne.jpg/960px-Hamburguesa_de_carne.jpg"}, {"nome": "Veggie", "desc": "Burger de grão-de-bico, queijo coalho, rúcula e maionese de ervas", "preco": 27.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Veggie_burger_on_plate_%28Unsplash%29.jpg/960px-Veggie_burger_on_plate_%28Unsplash%29.jpg"}]}, {"categoria": "Combos", "itens": [{"nome": "Combo Clássico", "desc": "Clássico + batata média + refri lata", "preco": 36.9, "de": 41.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Fast_Food_for_Lunch_%28Unsplash%29.jpg/960px-Fast_Food_for_Lunch_%28Unsplash%29.jpg"}, {"nome": "Combo X-Bacon", "desc": "X-Bacon + batata média + refri lata", "preco": 41.9, "destaque": true, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Gros_hamburger.jpg/960px-Gros_hamburger.jpg"}, {"nome": "Combo Casal", "desc": "2 burgers à escolha + batata grande + 2 refris", "preco": 74.9, "badge": "Novo", "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Stockholm%2C_Sweden_%28Unsplash_fbr7RVySrgI%29.jpg/960px-Stockholm%2C_Sweden_%28Unsplash_fbr7RVySrgI%29.jpg"}]}, {"categoria": "Acompanhamentos", "itens": [{"nome": "Batata média", "desc": "Porção 200g com sal e orégano", "preco": 14.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Chips_by_the_sea_%28Unsplash%29.jpg/960px-Chips_by_the_sea_%28Unsplash%29.jpg"}, {"nome": "Batata grande com cheddar e bacon", "desc": "Porção 400g", "preco": 26.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/French_Fries.JPG/960px-French_Fries.JPG"}, {"nome": "Onion rings", "desc": "10 anéis de cebola empanados", "preco": 16.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Beer_Battered_Onion_Rings_-_RV90_-_20241107-133409.jpg/960px-Beer_Battered_Onion_Rings_-_RV90_-_20241107-133409.jpg"}]}, {"categoria": "Bebidas", "itens": [{"nome": "Refrigerante lata", "desc": "Coca-Cola, Guaraná, Sprite ou Zero", "preco": 6.0, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Raleigh_Coca-Cola_%28Unsplash%29.jpg/960px-Raleigh_Coca-Cola_%28Unsplash%29.jpg"}, {"nome": "Suco natural 500ml", "desc": "Laranja, limão ou maracujá", "preco": 9.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/00/Cocktail_orange_drink_%28Unsplash%29.jpg/960px-Cocktail_orange_drink_%28Unsplash%29.jpg"}, {"nome": "Água mineral", "desc": "500ml com ou sem gás", "preco": 4.0}]}, {"categoria": "Sobremesas", "itens": [{"nome": "Brownie com sorvete", "desc": "Brownie de chocolate meio amargo com bola de creme", "preco": 15.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Chocolate_Cake_%28Unsplash%29.jpg/960px-Chocolate_Cake_%28Unsplash%29.jpg"}, {"nome": "Milkshake 400ml", "desc": "Chocolate, morango ou ovomaltine", "preco": 17.9, "destaque": true, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Coffee_%28Unsplash%29.jpg/960px-Coffee_%28Unsplash%29.jpg"}]}], "_nota": "Demo: aberto 24h de propósito, pra gravar o criativo a qualquer hora.", "marca": "", "capa": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Friends_eating_lunch_in_diner_%28Unsplash%29.jpg/960px-Friends_eating_lunch_in_diner_%28Unsplash%29.jpg", "avaliacao": 4.9, "bairro": "Centro", "cidade": "Curitiba, PR", "boas_vindas": "Bem-vindo ao Burger do Zé — hambúrguer artesanal desde 2019. Peça aqui e receba em casa ou retire no balcão.", "instagram": "@burgerdoze", "sugestoes": ["Batata média", "Refrigerante lata", "Onion rings"], "_creditos": "Fotos da demo: Wikimedia Commons (importadas do Unsplash), domínio público / CC0."};
+const CONFIG = {"slug": "demo", "nome": "Burger do Zé", "descricao": "Hambúrguer artesanal • Entrega e retirada", "whatsapp": "5541987965404", "cor": "#E4572E", "logo": "", "endereco": "Rua das Flores, 123 – Centro", "tempo_entrega": "40–60 min", "taxa_entrega": 5.0, "pedido_minimo": 20.0, "entrega": true, "retirada": true, "pagamentos": ["Pix", "Cartão na entrega", "Dinheiro"], "aceitar_fechado": false, "horario": {"dom": ["00:00", "23:59"], "seg": ["00:00", "23:59"], "ter": ["00:00", "23:59"], "qua": ["00:00", "23:59"], "qui": ["00:00", "23:59"], "sex": ["00:00", "23:59"], "sab": ["00:00", "23:59"]}, "cardapio": [{"categoria": "Burgers", "itens": [{"nome": "Clássico", "desc": "Pão brioche, 160g de carne, queijo prato, alface, tomate e molho da casa", "preco": 24.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/da/Burgers_for_Dinner_%28Unsplash%29.jpg/960px-Burgers_for_Dinner_%28Unsplash%29.jpg"}, {"nome": "X-Bacon", "desc": "160g de carne, cheddar, bacon crocante e cebola caramelizada", "preco": 29.9, "destaque": true, "badge": "Mais pedido", "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/77/Gourmet_Hamburger_%28Unsplash%29.jpg/960px-Gourmet_Hamburger_%28Unsplash%29.jpg"}, {"nome": "Duplo Smash", "desc": "Dois smash de 90g, queijo americano, picles e molho especial", "preco": 32.9, "destaque": true, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/Hamburguesa_de_carne.jpg/960px-Hamburguesa_de_carne.jpg"}, {"nome": "Veggie", "desc": "Burger de grão-de-bico, queijo coalho, rúcula e maionese de ervas", "preco": 27.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/81/Veggie_burger_on_plate_%28Unsplash%29.jpg/960px-Veggie_burger_on_plate_%28Unsplash%29.jpg"}]}, {"categoria": "Combos", "itens": [{"nome": "Combo Clássico", "desc": "Clássico + batata média + refri lata", "preco": 36.9, "de": 41.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/42/Fast_Food_for_Lunch_%28Unsplash%29.jpg/960px-Fast_Food_for_Lunch_%28Unsplash%29.jpg"}, {"nome": "Combo X-Bacon", "desc": "X-Bacon + batata média + refri lata", "preco": 41.9, "destaque": true, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Gros_hamburger.jpg/960px-Gros_hamburger.jpg"}, {"nome": "Combo Casal", "desc": "2 burgers à escolha + batata grande + 2 refris", "preco": 74.9, "badge": "Novo", "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Stockholm%2C_Sweden_%28Unsplash_fbr7RVySrgI%29.jpg/960px-Stockholm%2C_Sweden_%28Unsplash_fbr7RVySrgI%29.jpg"}]}, {"categoria": "Acompanhamentos", "itens": [{"nome": "Batata média", "desc": "Porção 200g com sal e orégano", "preco": 14.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Chips_by_the_sea_%28Unsplash%29.jpg/960px-Chips_by_the_sea_%28Unsplash%29.jpg"}, {"nome": "Batata grande com cheddar e bacon", "desc": "Porção 400g", "preco": 26.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/83/French_Fries.JPG/960px-French_Fries.JPG"}, {"nome": "Onion rings", "desc": "10 anéis de cebola empanados", "preco": 16.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/76/Beer_Battered_Onion_Rings_-_RV90_-_20241107-133409.jpg/960px-Beer_Battered_Onion_Rings_-_RV90_-_20241107-133409.jpg"}]}, {"categoria": "Bebidas", "itens": [{"nome": "Refrigerante lata", "desc": "Coca-Cola, Guaraná, Sprite ou Zero", "preco": 6.0, "imagem": "img/refrigerante.png", "ajuste": "contain"}, {"nome": "Suco natural 500ml", "desc": "Laranja, limão ou maracujá", "preco": 9.9, "imagem": "img/suco.png", "ajuste": "contain"}, {"nome": "Água mineral", "desc": "500ml com ou sem gás", "preco": 4.0, "imagem": "img/agua.webp", "ajuste": "contain"}]}, {"categoria": "Sobremesas", "itens": [{"nome": "Brownie com sorvete", "desc": "Brownie de chocolate meio amargo com bola de creme", "preco": 15.9, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d8/Chocolate_Cake_%28Unsplash%29.jpg/960px-Chocolate_Cake_%28Unsplash%29.jpg"}, {"nome": "Milkshake 400ml", "desc": "Chocolate, morango ou ovomaltine", "preco": 17.9, "destaque": true, "imagem": "https://thumb.wikimedia.org/wikipedia/commons/thumb/7/71/Coffee_%28Unsplash%29.jpg/960px-Coffee_%28Unsplash%29.jpg"}]}], "_nota": "Demo: aberto 24h de propósito, pra gravar o criativo a qualquer hora.", "marca": "", "capa": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/e0/Friends_eating_lunch_in_diner_%28Unsplash%29.jpg/960px-Friends_eating_lunch_in_diner_%28Unsplash%29.jpg", "avaliacao": 4.9, "bairro": "Centro", "cidade": "Curitiba, PR", "boas_vindas": "Bem-vindo ao Burger do Zé — hambúrguer artesanal desde 2019. Peça aqui e receba em casa ou retire no balcão.", "instagram": "@burgerdoze", "sugestoes": ["Batata média", "Refrigerante lata", "Onion rings"], "_creditos": "Fotos da demo: Wikimedia Commons (importadas do Unsplash), domínio público / CC0."};
 </script>
 <script>
 (function(){
@@ -303,6 +311,24 @@ const CONFIG = {"slug": "demo", "nome": "Burger do Zé", "descricao": "Hambúrgu
   const C = CONFIG;
   const K_SACOLA = 'sacola:' + C.slug, K_PEDIDOS = 'pedidos:' + C.slug;
   const norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const SVG={
+    menu:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+    tag:'<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>',
+    receipt:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+    info:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+    star:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+    pin:'<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+    delivery:'<rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>',
+    store:'<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+    burger:'<path d="M4 10a8 6 0 0 1 16 0z"/><line x1="3" y1="14" x2="21" y2="14"/><path d="M4 17h16a4 3 0 0 1-16 0z"/>',
+    drink:'<path d="M6 3h12l-1.5 18h-9z"/><line x1="12" y1="3" x2="15" y2="1"/><line x1="7" y1="9" x2="17" y2="9"/>',
+    fries:'<path d="M6 10h12l-1.5 11h-9z"/><path d="M8 10V4M11 10V3M14 10V4M17 10V5"/>',
+    dessert:'<path d="M3 21h18"/><path d="M5 21v-9a7 7 0 0 1 14 0v9"/><path d="M12 5V2"/>',
+    pizza:'<path d="M12 2L3 20h18z"/><circle cx="12" cy="11" r="1"/><circle cx="9" cy="16" r="1"/><circle cx="15" cy="16" r="1"/>',
+    bowl:'<path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M8 6c1-2 3-2 4 0M13 6c1-2 3-2 4 0"/>'
+  };
+  const ic=(n,cls)=>'<span class="ic'+(cls?' '+cls:'')+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+SVG[n]+'</svg></span>';
+  document.querySelectorAll('[data-ic]').forEach(el=>{ el.outerHTML=ic(el.dataset.ic); });
   const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
   // ---------- horário ----------
@@ -329,18 +355,18 @@ const CONFIG = {"slug": "demo", "nome": "Burger do Zé", "descricao": "Hambúrgu
   const st=$('status'); st.className='status'+(sit.aberto?'':' fechado');
   let stHtml='<span class="dot"></span>'+(sit.aberto?('Aberto'+(sit.h24?' • 24h':sit.fecha?' até às '+sit.fecha:' agora')):('Fechado'+(sit.abre?', abre '+sit.abre:'')));
   const local=[C.bairro,C.cidade].filter(Boolean).join(', ');
-  if(local) stHtml+='<span class="sep">•</span><span style="font-weight:500;color:var(--muted)">📍 '+esc(local)+'</span>';
+  if(local) stHtml+='<span class="sep">•</span><span style="font-weight:500;color:var(--muted)">'+ic('pin')+esc(local)+'</span>';
   stHtml+='<span class="sep">•</span><a id="maisInfo">Mais informações</a>';
   st.innerHTML=stHtml; $('maisInfo').onclick=()=>abrirInfo();
-  const modos=[]; if(C.entrega) modos.push('<span>🛵 Entrega <small>'+(C.tempo_entrega?esc(C.tempo_entrega)+' • ':'')+(C.taxa_entrega>0?brl(C.taxa_entrega):'grátis')+'</small></span>');
-  if(C.retirada) modos.push('<span>🏪 Retirada</span>'); if(C.pedido_minimo>0) modos.push('<span><small>Mínimo '+brl(C.pedido_minimo)+'</small></span>');
+  const modos=[]; if(C.entrega) modos.push('<span>'+ic('delivery')+'Entrega <small>'+(C.tempo_entrega?esc(C.tempo_entrega)+' • ':'')+(C.taxa_entrega>0?brl(C.taxa_entrega):'grátis')+'</small></span>');
+  if(C.retirada) modos.push('<span>'+ic('store')+'Retirada</span>'); if(C.pedido_minimo>0) modos.push('<span><small>Mínimo '+brl(C.pedido_minimo)+'</small></span>');
   $('modos').innerHTML=modos.join(''); if(!modos.length) $('modos').style.display='none';
   $('boas').textContent=C.boas_vindas||C.descricao||''; if(!$('boas').textContent) $('boas').style.display='none';
   $('rodape').innerHTML=(C.marca?'Feito com <b>'+esc(C.marca)+'</b> • ':'')+'Pedido enviado direto para o WhatsApp da loja • sem taxas de aplicativo';
 
   // ---------- itens ----------
   const itens={}; const lista=[];
-  const emoji=cat=>{const c=norm(cat); if(/bebida|suco|drink|refri/.test(c))return'🥤'; if(/sobremesa|doce/.test(c))return'🍰'; if(/batata|acompanh|porc/.test(c))return'🍟'; if(/pizza/.test(c))return'🍕'; if(/acai/.test(c))return'🍧'; if(/salada/.test(c))return'🥗'; if(/marmita|prato|almoc/.test(c))return'🍛'; return'🍔';};
+  const icone=cat=>{const c=norm(cat); const n=/bebida|suco|drink|refri/.test(c)?'drink':/sobremesa|doce/.test(c)?'dessert':/batata|acompanh|porc/.test(c)?'fries':/pizza/.test(c)?'pizza':/acai|salada|marmita|prato|almoc/.test(c)?'bowl':'burger'; return ic(n);};
   C.cardapio.forEach((cat,ci)=>cat.itens.forEach((it,ii)=>{const key=ci+'-'+ii; itens[key]=Object.assign({key,cat:cat.categoria},it); lista.push(itens[key]);}));
   const porNome=n=>lista.find(i=>norm(i.nome)===norm(n));
   const sugestoes=(C.sugestoes||[]).map(porNome).filter(Boolean);
@@ -348,7 +374,7 @@ const CONFIG = {"slug": "demo", "nome": "Burger do Zé", "descricao": "Hambúrgu
   function card(it,extra){
     const promo=it.de&&it.de>it.preco;
     return '<button class="card" data-key="'+it.key+'" data-busca="'+esc(norm(it.nome+' '+(it.desc||'')+' '+it.cat))+'">'+
-      (it.imagem?'<img class="foto" src="'+esc(it.imagem)+'" alt="" loading="lazy">':'<div class="semfoto">'+emoji(it.cat)+'</div>')+
+      (it.imagem?'<img class="foto'+(it.ajuste==='contain'?' contain':'')+'" src="'+esc(it.imagem)+'" alt="" loading="lazy">':'<div class="semfoto">'+icone(it.cat)+'</div>')+
       (promo?'<span class="tag promo">Promoção</span>':it.badge?'<span class="tag">'+esc(it.badge)+'</span>':'')+
       '<span class="qtd" hidden></span>'+
       '<div class="txt"><div class="n">'+esc(it.nome)+'</div>'+(it.desc?'<div class="d">'+esc(it.desc)+'</div>':'')+
@@ -356,9 +382,9 @@ const CONFIG = {"slug": "demo", "nome": "Burger do Zé", "descricao": "Hambúrgu
   }
   const menu=$('menu'); let html='';
   const destaques=lista.filter(i=>i.destaque);
-  if(destaques.length) html+='<section id="destaques"><h2>⭐ Destaques</h2><div class="scroller">'+destaques.map(card).join('')+'</div></section>';
+  if(destaques.length) html+='<section id="destaques"><h2>'+ic('star')+'Destaques</h2><div class="scroller">'+destaques.map(card).join('')+'</div></section>';
   const promos=lista.filter(i=>i.de&&i.de>i.preco);
-  if(promos.length) html+='<section id="promocoes"><h2>🏷️ Promoções</h2><div class="grade">'+promos.map(card).join('')+'</div></section>';
+  if(promos.length) html+='<section id="promocoes"><h2>'+ic('tag')+'Promoções</h2><div class="grade">'+promos.map(card).join('')+'</div></section>';
   C.cardapio.forEach((cat,ci)=>{ html+='<section id="cat'+ci+'" class="categoria"><h2>'+esc(cat.categoria)+'</h2><div class="grade">'+cat.itens.map((_,ii)=>card(itens[ci+'-'+ii])).join('')+'</div></section>'; });
   menu.innerHTML=html;
   menu.querySelectorAll('.card').forEach(el=>el.onclick=()=>abrirItem(el.dataset.key));
@@ -391,7 +417,7 @@ const CONFIG = {"slug": "demo", "nome": "Burger do Zé", "descricao": "Hambúrgu
   function chipsHtml(){
     const fora=sugestoes.filter(s=>!sacola.some(l=>l.key===s.key));
     if(!fora.length) return '';
-    return '<label class="campo">Peça também</label><div class="chips">'+fora.map(s=>'<button class="chip" data-key="'+s.key+'">'+(s.imagem?'<img src="'+esc(s.imagem)+'" alt="">':'<span class="semfoto">'+emoji(s.cat)+'</span>')+'<span>'+esc(s.nome)+'<small>'+brl(s.preco)+'</small></span></button>').join('')+'</div>';
+    return '<label class="campo">Peça também</label><div class="chips">'+fora.map(s=>'<button class="chip" data-key="'+s.key+'">'+(s.imagem?'<img src="'+esc(s.imagem)+'" alt="">':'<span class="semfoto">'+icone(s.cat)+'</span>')+'<span>'+esc(s.nome)+'<small>'+brl(s.preco)+'</small></span></button>').join('')+'</div>';
   }
   function renderSacola(){
     const n=nItens(), sub=subtotal();
@@ -416,12 +442,12 @@ const CONFIG = {"slug": "demo", "nome": "Burger do Zé", "descricao": "Hambúrgu
   let atual=null, qtd=1;
   function abrirItem(key){
     atual=key; qtd=1; const it=itens[key];
-    const f=$('siFoto'); if(it.imagem){f.src=it.imagem; f.hidden=false;} else {f.hidden=true; f.removeAttribute('src');}
+    const f=$('siFoto'); if(it.imagem){f.src=it.imagem; f.hidden=false; f.classList.toggle('contain',it.ajuste==='contain');} else {f.hidden=true; f.removeAttribute('src');}
     $('siNome').textContent=it.nome; $('siDesc').textContent=it.desc||''; $('siObs').value='';
     $('siPreco').innerHTML=brl(it.preco)+(it.de&&it.de>it.preco?' <s style="color:var(--muted);font-weight:500;font-size:14px">'+brl(it.de)+'</s>':'');
     const sug=sugestoes.filter(s=>s.key!==key);
     $('siSugBox').style.display=sug.length?'':'none';
-    $('siSug').innerHTML=sug.map(s=>'<button class="chip" data-key="'+s.key+'">'+(s.imagem?'<img src="'+esc(s.imagem)+'" alt="">':'<span class="semfoto">'+emoji(s.cat)+'</span>')+'<span>'+esc(s.nome)+'<small>+ '+brl(s.preco)+'</small></span></button>').join('');
+    $('siSug').innerHTML=sug.map(s=>'<button class="chip" data-key="'+s.key+'">'+(s.imagem?'<img src="'+esc(s.imagem)+'" alt="">':'<span class="semfoto">'+icone(s.cat)+'</span>')+'<span>'+esc(s.nome)+'<small>+ '+brl(s.preco)+'</small></span></button>').join('');
     $('siSug').querySelectorAll('.chip').forEach(b=>b.onclick=()=>{addSacola(b.dataset.key,1,''); b.style.opacity=.4;});
     renderItem(); abrir('sheetItem');
   }
@@ -434,8 +460,8 @@ const CONFIG = {"slug": "demo", "nome": "Burger do Zé", "descricao": "Hambúrgu
   $('verSacola').onclick=()=>{ renderSacola(); abrir('sheetSacola'); };
   $('addMais').onclick=fechar;
   let tipo=C.entrega?'entrega':'retirada';
-  const tipos=[]; if(C.entrega) tipos.push(['entrega','🛵 Entrega']); if(C.retirada) tipos.push(['retirada','🏪 Retirada']);
-  tipos.forEach(([v,t])=>{const b=document.createElement('button'); b.textContent=t; b.dataset.v=v; b.onclick=()=>{tipo=v;renderCheckout();}; $('ckTipo').appendChild(b);});
+  const tipos=[]; if(C.entrega) tipos.push(['entrega',ic('delivery')+'Entrega']); if(C.retirada) tipos.push(['retirada',ic('store')+'Retirada']);
+  tipos.forEach(([v,t])=>{const b=document.createElement('button'); b.innerHTML=t; b.dataset.v=v; b.onclick=()=>{tipo=v;renderCheckout();}; $('ckTipo').appendChild(b);});
   if(tipos.length<2){ $('ckTipo').style.display='none'; $('lblTipo').style.display='none'; }
   (C.pagamentos||['Pix']).forEach(p=>{const o=document.createElement('option'); o.textContent=p; $('ckPag').appendChild(o);});
   $('ckPag').onchange=renderCheckout;
